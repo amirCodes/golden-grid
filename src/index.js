@@ -1,8 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
+import App from './components/App';
 import * as serviceWorker from './serviceWorker';
+
+//to fix console error. not sure why
+window.React = React;
+window.ReactDOM = ReactDOM;
 
 ReactDOM.render(<App />, document.getElementById('root'));
 
