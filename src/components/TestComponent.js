@@ -7,6 +7,11 @@ class TestComponent extends React.Component {
   }
 
   render() {
+    layoutConfig.on( 'stateChanged', function(){
+      var state = JSON.stringify( layoutConfig.toConfig() );
+      localStorage.setItem( 'savedState', state );
+    });
+    
     return (
       <React.Fragment>
         <button onClick={this.onPopOut}>pop out</button>
@@ -16,31 +21,41 @@ class TestComponent extends React.Component {
   }
 }
 
-var myLayout = new GoldenLayout({
+const defaultConfig = new GoldenLayout({
   content: [{
     type: 'row',
     content:[{
       type:'react-component',
-      component: 'Test-component',
+      component: 'TestComponent',
       props: { label: 'A' }
     },{
       type: 'column',
       content:[{
         type:'react-component',
-        component: 'Test-component',
+        component: 'TestComponent',
         props: { label: 'B' }
       },{
         type:'react-component',
-        component: 'Test-component',
+        component: 'TestComponent',
         props: { label: 'C' }
       }]
     }]
   }]
 });
 
-myLayout.registerComponent('Test-component', TestComponent );
+const savedLayout = localStorage.getItem( 'savedState' );
 
-myLayout.init();
+let layoutConfig;
+
+if( savedLayout !== null) {
+  layoutConfig = new GoldenLayout( JSON.parse( savedLayout ) );
+} else {
+  layoutConfig = new GoldenLayout( defaultConfig )
+}
+
+layoutConfig.registerComponent('TestComponent', TestComponent );
+
+layoutConfig.init();
 
 
 
